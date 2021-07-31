@@ -1,0 +1,29 @@
+{
+  "name": "@sunshine-cli-dev/core",
+  "version": "0.0.0",
+  "description": "> TODO: description",
+  "author": "宿愿Cc <375642570@qq.com>",
+  "homepage": "",
+  "license": "ISC",
+  "main": "lib/index.js",
+  "directories": {
+    "lib": "lib",
+    "test": "__tests__"
+  },
+  "bin": {
+    "sunshine-cli-dev": "bin/index.js"
+  },
+  "files": [
+    "lib"
+  ],
+  "publishConfig": {
+    "registry": "https://registry.npm.taobao.org/"
+  },
+  "dependencies": {
+    "@sunshine-cli-dev/utils": "file:../../utils/utils",
+    "import-local": "^3.0.2"
+  },
+  "scripts": {
+    "test": "echo \"Error: run tests from root\" && exit 1"
+  }
+}
