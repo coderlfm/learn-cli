@@ -8,20 +8,42 @@ const rootCheck = require('root-check')
 const userHome = require('user-home')
 const pathExists = require('path-exists').sync
 
+
 const pkg = require('../package.json')
 const constant = require('./constant')
 
 module.exports = cli;
+
 function cli(argv) {
   try {
     checkPkgVersion();
     checkNodeVersion();
     checkRoot();
     checkUserHome();
+    checkInputArgs();
+
+    log.verbose('test', 'test debug')
   } catch (error) {
     // 自定义错误处理
     log.error(error.message)
   }
+}
+
+/**
+ * 校验参数
+ */
+function checkInputArgs() {
+  const minimist = require("minimist")
+  const args = minimist(process.argv.slice(2))
+  console.log('args:', args);
+  checkArgs(args)
+}
+
+/**
+ * 开启 debug 模式
+ */
+function checkArgs(args) {
+  log.level = process.env.LOG_LEVEL = args.debug ? 'verbose' : 'info'
 }
 
 /**
@@ -55,6 +77,9 @@ function checkNodeVersion() {
   }
 }
 
+/**
+ * 检测当前版本号
+ */
 function checkPkgVersion() {
   log.info('sunshinle cli version：', pkg.version)
   log.verbose('test', 'debugger')
