@@ -21,7 +21,9 @@
   },
   "dependencies": {
     "@sunshine-cli-dev/utils": "file:../../utils/utils",
-    "import-local": "^3.0.2"
+    "colors": "^1.4.0",
+    "import-local": "^3.0.2",
+    "semver": "^7.3.5"
   },
   "scripts": {
     "test": "echo \"Error: run tests from root\" && exit 1"
