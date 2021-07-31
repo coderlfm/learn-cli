@@ -7,7 +7,7 @@ const colors = require('colors')
 const rootCheck = require('root-check')
 const userHome = require('user-home')
 const pathExists = require('path-exists').sync
-
+const dotenv = require('dotenv')
 
 const pkg = require('../package.json')
 const constant = require('./constant')
@@ -21,12 +21,39 @@ function cli(argv) {
     checkRoot();
     checkUserHome();
     checkInputArgs();
+    checkEnv();
 
     log.verbose('test', 'test debug')
   } catch (error) {
     // 自定义错误处理
     log.error(error.message)
   }
+}
+
+/**
+ * 判断是否有 .env 文件
+ */
+function checkEnv() {
+  const dotenvPath = path.resolve(process.cwd(), '.env');
+  if (pathExists(dotenvPath)) {
+    dotenv.config({ path: dotenvPath });
+  }
+
+  createDefaultEnv();
+  console.log('process.env.CLI_HOME:', process.env.CLI_HOME);
+}
+
+/**
+ * 设置缓存目录
+ */
+function createDefaultEnv() {
+  let home;
+  if (process.env.CLI_HOME) {
+    home = path.join(userHome, process.env.CLI_HOME);
+  } else {
+    home = path.join(userHome, constant.DEFAULT_CLI_HOME);
+  }
+  process.env.CLI_HOME = home;
 }
 
 /**

@@ -3,6 +3,7 @@ lockfileVersion: 5.3
 specifiers:
   '@sunshine-cli-dev/utils': file:../../utils/utils
   colors: ^1.4.0
+  dotenv: ^10.0.0
   import-local: ^3.0.2
   minimist: ^1.2.5
   path-exists: ^4.0.0
@@ -13,6 +14,7 @@ specifiers:
 dependencies:
   '@sunshine-cli-dev/utils': link:../../utils/utils
   colors: 1.4.0
+  dotenv: 10.0.0
   import-local: 3.0.2
   minimist: 1.2.5
   path-exists: 4.0.0
@@ -51,6 +53,11 @@ packages:
   /default-uid/1.0.0:
     resolution: {integrity: sha1-/O+p359axAyJFtkS3R/hFGqjxZ4=}
     engines: {node: '>=0.10.0'}
+    dev: false
+
+  /dotenv/10.0.0:
+    resolution: {integrity: sha512-rlBi9d8jpv9Sf1klPjNfFAuWDjKLwTIJJ/VxtoTwIR6hnZxcEOQCZg2oIL3MWBYw5GpUDKOEnND7LXTbIpQ03Q==}
+    engines: {node: '>=10'}
     dev: false
 
   /downgrade-root/1.2.2:
