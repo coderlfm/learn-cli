@@ -1,7 +1,9 @@
 'use strict';
-const { add, log } = require('@sunshine-cli-dev/utils')
+const { log } = require('@sunshine-cli-dev/utils')
 const semver = require('semver')
 const colors = require('colors')
+const rootCheck = require('root-check')
+
 const pkg = require('../package.json')
 const constant = require('./constant')
 
@@ -10,11 +12,20 @@ function cli(argv) {
   try {
     checkPkgVersion();
     checkNodeVersion();
-
+    checkRoot()
   } catch (error) {
     // 自定义错误处理
     log.error(error.message)
   }
+}
+
+/**
+ * 校验是否root用户启动
+ */
+function checkRoot() {
+  rootCheck();
+  // windows 上无效
+  console.log(process.getuid);
 }
 
 /**
