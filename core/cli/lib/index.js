@@ -13,11 +13,11 @@ const dotenv = require('dotenv')
 const pkg = require('../package.json')
 const constant = require('./constant')
 
-// const command = require('./command')
+const command = require('./command')
 
-// module.exports = command;
+module.exports = command;
 
-module.exports = cli;
+// module.exports = cli;
 
 async function cli(argv) {
 
