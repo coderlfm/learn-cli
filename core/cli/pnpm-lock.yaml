@@ -1,8 +1,10 @@
 lockfileVersion: 5.3
 
 specifiers:
+  '@sunshine-cli-dev/npm-info': link:..\..\utils\npm-info
   '@sunshine-cli-dev/utils': file:../../utils/utils
   colors: ^1.4.0
+  commander: ^8.1.0
   dotenv: ^10.0.0
   import-local: ^3.0.2
   minimist: ^1.2.5
@@ -12,8 +14,10 @@ specifiers:
   user-home: ^3.0.0
 
 dependencies:
+  '@sunshine-cli-dev/npm-info': link:../../utils/npm-info
   '@sunshine-cli-dev/utils': link:../../utils/utils
   colors: 1.4.0
+  commander: 8.1.0
   dotenv: 10.0.0
   import-local: 3.0.2
   minimist: 1.2.5
@@ -48,6 +52,11 @@ packages:
   /colors/1.4.0:
     resolution: {integrity: sha512-a+UqTh4kgZg/SlGvfbzDHpgRu7AAQOmmqRHJnxhRZICKFUT91brVhNNt58CMWU9PsBbv3PDCZUHbVxuDiH2mtA==}
     engines: {node: '>=0.1.90'}
+    dev: false
+
+  /commander/8.1.0:
+    resolution: {integrity: sha512-mf45ldcuHSYShkplHHGKWb4TrmwQadxOn7v4WuhDJy0ZVoY5JFajaRDKD0PNe5qXzBX0rhovjTnP6Kz9LETcuA==}
+    engines: {node: '>= 12'}
     dev: false
 
   /default-uid/1.0.0:

@@ -2,6 +2,7 @@
 const path = require('path')
 
 const { log } = require('@sunshine-cli-dev/utils')
+const { getNpmVersion } = require('@sunshine-cli-dev/npm-info')
 const semver = require('semver')
 const colors = require('colors')
 const rootCheck = require('root-check')
@@ -12,9 +13,14 @@ const dotenv = require('dotenv')
 const pkg = require('../package.json')
 const constant = require('./constant')
 
+// const command = require('./command')
+
+// module.exports = command;
+
 module.exports = cli;
 
-function cli(argv) {
+async function cli(argv) {
+  console.log(1111);
   try {
     checkPkgVersion();
     checkNodeVersion();
@@ -22,11 +28,27 @@ function cli(argv) {
     checkUserHome();
     checkInputArgs();
     checkEnv();
+    await checkVersionUpdate();
 
     log.verbose('test', 'test debug')
   } catch (error) {
     // 自定义错误处理
     log.error(error.message)
+  }
+}
+
+/**
+ * 校验版本更新
+ */
+async function checkVersionUpdate() {
+  console.log('校验版本更新');
+  const currentVersion = pkg.version;
+  const pkgName = pkg.name;
+
+  const newVserion = await getNpmVersion(currentVersion, pkgName);
+  if (newVserion) {
+    const msg = `当前版本为：${colors.cyan(currentVersion)} ，最新版本为：${colors.cyan(newVserion)} ，请执行 ${colors.cyan(`npm install ${pkgName} -g`)}  执行更新`;
+    log.notice(colors.yellow('更新提示', msg));
   }
 }
 
@@ -40,7 +62,7 @@ function checkEnv() {
   }
 
   createDefaultEnv();
-  console.log('process.env.CLI_HOME:', process.env.CLI_HOME);
+  console.log('缓存主目录 process.env.CLI_HOME:', process.env.CLI_HOME);
 }
 
 /**
@@ -62,7 +84,7 @@ function createDefaultEnv() {
 function checkInputArgs() {
   const minimist = require("minimist")
   const args = minimist(process.argv.slice(2))
-  console.log('args:', args);
+  // console.log('args:', args);
   checkArgs(args)
 }
 
@@ -98,8 +120,7 @@ function checkRoot() {
 function checkNodeVersion() {
   const currentVersion = process.version;
   const lowestVsrion = constant.LOWEST_NODE_VERSION;
-
-  if (semver.gte(lowestVsrion, currentVersion)) {
+  if (!semver.gte(currentVersion, lowestVsrion)) {
     throw new Error(colors.red(`sunshine cli 需要安装 v${lowestVsrion} 以上的 node 版本`))
   }
 }
