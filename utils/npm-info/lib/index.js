@@ -3,23 +3,42 @@ const axios = require('axios');
 const semver = require('semver');
 const urlJoin = require('url-join');
 
-function getNpmVersionSync(npmName){
-  
+const execSync = require('child_process').execSync
+
+/**
+ * 获取npm最新包版本 同步方式
+ * @param {string} currentVersion 当前版本
+ * @param {string} npmName npm包名
+ * @returns 
+ */
+function getNpmVersionSync(currentVersion, npmName) {
+  const newVserion = execSync(`npm view ${npmName} version`).toString().trim()
+  return semver.gt(newVserion, currentVersion) ? newVserion : null
 }
 
+/**
+ * 获取 npm 信息
+ * @param {string} npmName npm包名
+ * @param {string} original 目标地址 npmjs 或者 npm.taobao  
+ * @returns 
+ */
 async function getNpmInfo(npmName, original) {
   return await axios.get(urlJoin(original || 'https://registry.npmjs.org/', npmName))
 }
 
+/**
+ * 获取npm最新包版本
+ * @param {string} currentVersion 当前版本
+ * @param {string} npmName npm包名
+ * @returns 
+ */
 async function getNpmVersion(currentVersion, npmName) {
-  currentVersion = '16.10.10';
-  npmName = 'react';
 
   try {
     const { data } = await getNpmInfo(npmName)
     const releaseVersion = getSemverVersion(currentVersion, data.versions)
     return releaseVersion.length ? releaseVersion[0] : null
-    
+
   } catch (error) {
     return Promise.reject(error.message)
   }
@@ -40,5 +59,6 @@ function getSemverVersion(currentVersion, versions) {
 
 
 module.exports = {
-  getNpmVersion
+  getNpmVersion,
+  getNpmVersionSync
 };

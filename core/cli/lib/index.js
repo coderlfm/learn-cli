@@ -2,7 +2,7 @@
 const path = require('path')
 
 const { log } = require('@sunshine-cli-dev/utils')
-const { getNpmVersion } = require('@sunshine-cli-dev/npm-info')
+const { getNpmVersion, getNpmVersionSync } = require('@sunshine-cli-dev/npm-info')
 const semver = require('semver')
 const colors = require('colors')
 const rootCheck = require('root-check')
@@ -20,7 +20,7 @@ const constant = require('./constant')
 module.exports = cli;
 
 async function cli(argv) {
-  console.log(1111);
+
   try {
     checkPkgVersion();
     checkNodeVersion();
@@ -42,10 +42,14 @@ async function cli(argv) {
  */
 async function checkVersionUpdate() {
   console.log('校验版本更新');
-  const currentVersion = pkg.version;
-  const pkgName = pkg.name;
+  // const currentVersion = pkg.version;
+  // const pkgName = pkg.name;
 
-  const newVserion = await getNpmVersion(currentVersion, pkgName);
+  const currentVersion = '16.10.0';
+  const pkgName = 'react';
+
+  // const newVserion = await getNpmVersion(currentVersion, pkgName);
+  const newVserion = await getNpmVersionSync(currentVersion, pkgName);
   if (newVserion) {
     const msg = `当前版本为：${colors.cyan(currentVersion)} ，最新版本为：${colors.cyan(newVserion)} ，请执行 ${colors.cyan(`npm install ${pkgName} -g`)}  执行更新`;
     log.notice(colors.yellow('更新提示', msg));
