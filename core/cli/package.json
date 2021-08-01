@@ -30,9 +30,20 @@
     "path-exists": "^4.0.0",
     "root-check": "1.0.0",
     "semver": "^7.3.5",
-    "user-home": "^3.0.0"
+    "user-home": "^3.0.0",
+    "webpack": "^5.47.1",
+    "webpack-cli": "^4.7.2"
   },
   "scripts": {
-    "test": "echo \"Error: run tests from root\" && exit 1"
+    "test": "echo \"Error: run tests from root\" && exit 1",
+    "build": "webpack",
+    "dev": "webpack -w"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.14.8",
+    "@babel/preset-env": "^7.14.8",
+    "babel-loader": "^8.2.2",
+    "core-js": "^3.16.0",
+    "regenerator-runtime": "^0.13.9"
   }
 }

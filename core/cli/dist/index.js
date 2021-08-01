@@ -1,0 +1,1 @@
+(()=>{"use strict";var e={622:e=>{e.exports=require("path")}},o={};function r(t){var s=o[t];if(void 0!==s)return s.exports;var n=o[t]={exports:{}};return e[t](n,n.exports,r),n.exports}(()=>{const e=r(622);!async function(){console.log("utils",e.resolve(".")),await new Promise((e=>setTimeout(e,1e3))),console.log("请求结果",123)}()})()})();

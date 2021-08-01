@@ -7,6 +7,10 @@ const { log } = require('@sunshine-cli-dev/utils')
 
 if (importlocal(__dirname)) {
   log.info('sunshile cli', '加载本地模块')
-} else (
-  require('../lib')(process.argv.slice(2))
-)
+} else {
+
+  // console.log(process.versions);
+
+  // require('../lib')(process.argv.slice(2))
+  require('../dist')
+}
