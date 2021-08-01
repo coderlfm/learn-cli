@@ -11,7 +11,7 @@
     "test": "__tests__"
   },
   "bin": {
-    "sunshine-cli-dev": "bin/index.js"
+    "sunshine-cli-dev": "bin/index.mjs"
   },
   "files": [
     "lib"
@@ -20,7 +20,7 @@
     "registry": "https://registry.npm.taobao.org/"
   },
   "dependencies": {
-    "@sunshine-cli-dev/npm-info": "link:..\\..\\utils\\npm-info",
+    "@sunshine-cli-dev/npm-info": "file:../../utils/npm-info",
     "@sunshine-cli-dev/utils": "file:../../utils/utils",
     "colors": "^1.4.0",
     "commander": "^8.1.0",
