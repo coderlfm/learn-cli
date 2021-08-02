@@ -1,5 +1,7 @@
 'use strict';
 
+const Package = require('@sunshine-cli-dev/package')
+
 module.exports = exec;
 
 const SETTINGS = {
@@ -8,9 +10,15 @@ const SETTINGS = {
 
 function exec(souce, destination, objCmd) {
   const name = objCmd.name();
-  const targetPath = process.env.CLI_TARGET_PATH
+  const targetPath = process.env.CLI_TARGET_PATH;
+  const pakcageName = SETTINGS[name];
+  const packageVersion = 'latest';
 
-  console.log('name', name,);
-  console.log('targetPath', targetPath);
-  // TODO
+  const pkg = new Package({
+    targetPath,
+    pakcageName,
+    packageVersion
+  })
+  console.log('pkg:', pkg);
+
 }

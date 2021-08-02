@@ -1,0 +1,7 @@
+lockfileVersion: 5.3
+
+specifiers:
+  '@sunshine-cli-dev/package': file:../../models/package
+
+dependencies:
+  '@sunshine-cli-dev/package': link:../../models/package

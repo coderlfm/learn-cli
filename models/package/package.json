@@ -1,10 +1,7 @@
 {
-  "name": "@sunshine-cli-dev/exec",
+  "name": "@sunshine-cli-dev/package",
   "version": "0.0.0",
-  "description": "exec",
-  "keywords": [
-    "exec"
-  ],
+  "description": "package",
   "author": "宿愿Cc <375642570@qq.com>",
   "homepage": "https://github.com/coderlfm/learn-cli#readme",
   "license": "ISC",
@@ -28,8 +25,5 @@
   },
   "bugs": {
     "url": "https://github.com/coderlfm/learn-cli/issues"
-  },
-  "dependencies": {
-    "@sunshine-cli-dev/package": "file:../../models/package"
   }
 }
