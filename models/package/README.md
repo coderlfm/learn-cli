@@ -14,10 +14,8 @@ constructor 接收以下参数
 - `options.pakcageName`     package 包名
 - `options.packageVersion`     package 版本，默认 latest
 
-## Usage
-
-```
-const package = require('@sunshine-cli-dev/package');
-
-// TODO: DEMONSTRATE API
-```
+## getRootFilePath
+  1. 当成 package 解析，获取到 package.json 所在的目录 (pkg-dir)
+  2. 取到 main 或 lib
+  3. path.resolve 拼接得到入口地址
+  3. 路径兼容

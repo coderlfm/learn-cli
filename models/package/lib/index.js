@@ -1,4 +1,6 @@
-const { isObject } = require('@sunshine-cli-dev/utils')
+const pkgDir = require('pkg-dir').sync;
+const { isObject } = require('@sunshine-cli-dev/utils');
+const pathExists = require('path-exists').sync
 
 'use strict';
 
@@ -32,7 +34,12 @@ class Package {
   isExists() { }
 
   // 获取根路径
-  getRootFilePath() { }
+  getRootFilePath() {
+    if (this.targetPath) {
+      const dir = pkgDir(this.targetPath);
+      return pathExists(dir) ? dir : null
+    }
+  }
 
 }
 module.exports = Package;

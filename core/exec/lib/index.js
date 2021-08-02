@@ -14,6 +14,7 @@ function exec(souce, destination, objCmd) {
   const pakcageName = SETTINGS[name];
   const packageVersion = 'latest';
 
+
   const pkg = new Package({
     targetPath,
     pakcageName,
@@ -21,6 +22,8 @@ function exec(souce, destination, objCmd) {
   })
 
   const path = pkg.getRootFilePath()
-  console.log('pkg:', pkg);
+  // console.log('pkg:', pkg, 'path:', path);
 
+  // 加载文件
+  require(path).apply(null, arguments);
 }

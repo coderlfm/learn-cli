@@ -27,6 +27,8 @@
     "url": "https://github.com/coderlfm/learn-cli/issues"
   },
   "dependencies": {
-    "@sunshine-cli-dev/utils": "file:../../utils/utils"
+    "@sunshine-cli-dev/utils": "file:../../utils/utils",
+    "path-exists": "^4.0.0",
+    "pkg-dir": "^5.0.0"
   }
 }

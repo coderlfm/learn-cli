@@ -71,7 +71,7 @@ function registryCommand() {
   // 自定义事件监听
   program.on('option:targetPath', (e) => {
     // console.log("targetPath:", e, prgitogram.opts().targetPath);
-    process.env.CLI_TARGET_PATH = program.opts().tatargetPathr;
+    process.env.CLI_TARGET_PATH = program.opts().targetPath;
   })
 
   program.on('command:*', (params) => {
