@@ -2,6 +2,14 @@
 
 > TODO: description
 
+
+## 环境变量
+``` json
+    CLI_HOME_PATH: 全局缓存目录，会和用户主目录做拼接，如没有设置默认为 .sunshine-cli
+    LOG_LEVEL: debug 模式
+```
+
+
 ## Usage
 
     <!-- "@sunshine-cli-dev/utils": "file:../../utils/utils",

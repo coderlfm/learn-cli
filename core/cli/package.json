@@ -11,7 +11,7 @@
     "test": "__tests__"
   },
   "bin": {
-    "sunshine-cli-dev": "bin/index.mjs"
+    "sunshine-cli-dev": "bin/index.js"
   },
   "files": [
     "lib"
@@ -26,7 +26,6 @@
     "commander": "^8.1.0",
     "dotenv": "^10.0.0",
     "import-local": "^3.0.2",
-    "minimist": "^1.2.5",
     "path-exists": "^4.0.0",
     "root-check": "1.0.0",
     "semver": "^7.3.5",
