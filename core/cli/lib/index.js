@@ -1,7 +1,7 @@
 'use strict';
 const path = require('path')
 
-const { log } = require('@sunshine-cli-dev/utils')
+const { log } = require('@sunshine-cli-dev/log')
 const { getNpmVersion, getNpmVersionSync } = require('@sunshine-cli-dev/npm-info')
 const exec = require('@sunshine-cli-dev/exec')
 const semver = require('semver')
@@ -60,7 +60,7 @@ function registryCommand() {
 
   // 自定义事件监听
   program.on('option:debug', (e) => {
-    if (program.debug) {
+    if (program.opts()) {
       process.env.LOG_LEVEL = 'verbose'
     } else {
       process.env.LOG_LEVEL = 'info'
@@ -71,7 +71,7 @@ function registryCommand() {
   // 自定义事件监听
   program.on('option:targetPath', (e) => {
     // console.log("targetPath:", e, prgitogram.opts().targetPath);
-    process.env.CLI_TARGET_PATH = e;
+    process.env.CLI_TARGET_PATH = program.opts().tatargetPathr;
   })
 
   program.on('command:*', (params) => {

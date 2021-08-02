@@ -1,8 +1,15 @@
-'use strict';
+const { isObject } = require('@sunshine-cli-dev/utils')
 
+'use strict';
 
 class Package {
   constructor(options) {
+    if (!options) {
+      throw new Error('参数不能为空')
+    }
+    if (!isObject(options)) {
+      throw new Error('参数必须为一个对象')
+    }
 
     // 目标路径，调试模式会传入
     this.targetPath = options.targetPath;

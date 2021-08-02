@@ -4,8 +4,8 @@ specifiers:
   '@babel/core': ^7.14.8
   '@babel/preset-env': ^7.14.8
   '@sunshine-cli-dev/exec': link:..\exec
+  '@sunshine-cli-dev/log': link:..\..\utils\log
   '@sunshine-cli-dev/npm-info': file:../../utils/npm-info
-  '@sunshine-cli-dev/utils': file:../../utils/utils
   babel-loader: ^8.2.2
   colors: ^1.4.0
   commander: ^8.1.0
@@ -22,8 +22,8 @@ specifiers:
 
 dependencies:
   '@sunshine-cli-dev/exec': link:../exec
+  '@sunshine-cli-dev/log': link:../../utils/log
   '@sunshine-cli-dev/npm-info': link:../../utils/npm-info
-  '@sunshine-cli-dev/utils': link:../../utils/utils
   colors: 1.4.0
   commander: 8.1.0
   dotenv: 10.0.0

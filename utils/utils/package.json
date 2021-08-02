@@ -20,6 +20,5 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "dependencies": {
-    "npmlog": "^5.0.0"
   }
 }

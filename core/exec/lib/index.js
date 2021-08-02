@@ -19,6 +19,8 @@ function exec(souce, destination, objCmd) {
     pakcageName,
     packageVersion
   })
+
+  const path = pkg.getRootFilePath()
   console.log('pkg:', pkg);
 
 }

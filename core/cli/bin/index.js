@@ -3,7 +3,7 @@
 'use strict';
 // console.log('hello sunshine cli');
 const importlocal = require('import-local')
-const { log } = require('@sunshine-cli-dev/utils')
+const { log } = require('@sunshine-cli-dev/log')
 // import utils from '../lib/utils.mjs'
 
 if (importlocal(__dirname)) {

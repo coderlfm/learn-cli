@@ -1,7 +1,10 @@
 {
-  "name": "@sunshine-cli-dev/package",
+  "name": "@shunshile-cli-dev/log",
   "version": "0.0.0",
-  "description": "package",
+  "description": "log",
+  "keywords": [
+    "log"
+  ],
   "author": "宿愿Cc <375642570@qq.com>",
   "homepage": "https://github.com/coderlfm/learn-cli#readme",
   "license": "ISC",
@@ -27,6 +30,6 @@
     "url": "https://github.com/coderlfm/learn-cli/issues"
   },
   "dependencies": {
-    "@sunshine-cli-dev/utils": "file:../../utils/utils"
+    "npmlog": "^5.0.0"
   }
 }

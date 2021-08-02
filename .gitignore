@@ -3,3 +3,7 @@ node_modules
 lerna-debug.log
 /**/lerna-debug.log
 /**/node_modules
+package-lock.json
+/**/package-lock.json
+pnpm-lock.yaml
+/**/pnpm-lock.yaml
