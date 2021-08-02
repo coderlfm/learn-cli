@@ -30,7 +30,9 @@ async function cli(argv) {
   } catch (error) {
     // 自定义错误处理
     log.error(error.message)
-    log.verbose(error)
+    if (program.opts().debug) {
+      console.error(error);
+    }
   }
 }
 
@@ -38,6 +40,7 @@ async function prepare() {
   checkPkgVersion();
   checkNodeVersion();
   checkRoot();
+  checkEnv();
   checkUserHome();
   // await checkVersionUpdate();
 }

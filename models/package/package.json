@@ -27,7 +27,10 @@
     "url": "https://github.com/coderlfm/learn-cli/issues"
   },
   "dependencies": {
+    "@sunshine-cli-dev/npm-info": "link:..\\..\\utils\\npm-info",
     "@sunshine-cli-dev/utils": "file:../../utils/utils",
+    "fs-extra": "^10.0.0",
+    "npminstall": "^4.11.0",
     "path-exists": "^4.0.0",
     "pkg-dir": "^5.0.0"
   }

@@ -1,29 +1,60 @@
 'use strict';
-
+const path = require('path');
 const Package = require('@sunshine-cli-dev/package')
 
 module.exports = exec;
 
+const CACHE_DIR = 'dependecies';
 const SETTINGS = {
-  'init': '@vuejs/cli'
+  // 'init': '@vue/cli'
+  'init': 'foo'
 }
 
-function exec(souce, destination, objCmd) {
+async function exec(souce, destination, objCmd) {
   const name = objCmd.name();
-  const targetPath = process.env.CLI_TARGET_PATH;
+
+  let targetPath = process.env.CLI_TARGET_PATH;
   const pakcageName = SETTINGS[name];
-  const packageVersion = 'latest';
+  const packageVersion = '0.0.5';
+
+  let pkg;
+
+  if (!targetPath) {
+    targetPath = path.resolve(process.env.CLI_HOME_PATH, CACHE_DIR);
+    let storeDir = path.resolve(targetPath, 'node_modules');
+
+    pkg = new Package({
+      targetPath,
+      storeDir,
+      pakcageName,
+      packageVersion
+    })
+
+    if (pkg.isExists()) {
+      // 更新
+      console.log('更新');
+      await pkg.update();
+    } else {
+      // 安装
+      await pkg.install()
+      console.log('安装');
+    }
+    console.log('pkg', pkg);
 
 
-  const pkg = new Package({
-    targetPath,
-    pakcageName,
-    packageVersion
-  })
+  } else { // 加载本地模式
+    pkg = new Package({
+      targetPath,
+      pakcageName,
+      packageVersion
+    })
+  }
 
-  const path = pkg.getRootFilePath()
-  // console.log('pkg:', pkg, 'path:', path);
-
-  // 加载文件
-  require(path).apply(null, arguments);
+  const filePath = pkg.getRootFilePath()
+  console.log(filePath);
+  if (filePath) {
+    // 加载文件
+    console.log('加载文件');
+    require(filePath).apply(null, arguments);
+  }
 }

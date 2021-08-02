@@ -1,8 +1,12 @@
-const pkgDir = require('pkg-dir').sync;
-const { isObject } = require('@sunshine-cli-dev/utils');
-const pathExists = require('path-exists').sync
-
 'use strict';
+const path = require('path');
+const pkgDir = require('pkg-dir').sync;
+const pathExists = require('path-exists').sync
+const fse = require('fs-extra')
+const npminstall = require('npminstall')
+
+const { isObject } = require('@sunshine-cli-dev/utils');
+const { getDefaultRegistry, getNpmLastVersionSync } = require('@sunshine-cli-dev/npm-info')
 
 class Package {
   constructor(options) {
@@ -22,22 +26,91 @@ class Package {
     // package 版本，默认 latest
     this.packageVersion = options.packageVersion;
 
+    // 包名前缀
+    this.pakcageNamePreFix = `_${this.pakcageName}`.replace(/\//g, '_');
+  }
+
+  get cacheFilePath() {
+    /*
+      为何这样命名
+      utils.js 中的 getPackageStorePath() 有提现
+    */
+    return this.getSpecificCacheFilePath(this.packageVersion);
+  }
+
+  getSpecificCacheFilePath(version) {
+    return path.resolve(this.storeDir, `${this.pakcageNamePreFix}@${version}@${this.pakcageName}`)
+  }
+
+  // 处理 latest 版本号
+  prepare() {
+    if (this.packageVersion === 'latest') {
+      this.packageVersion = getNpmLastVersionSync(this.pakcageName);
+    }
+
+    // 缓存目录不存在时执行创建   这一步不做也不会出错，保险起见还是加上判断
+    if (this.storeDir && !pathExists(this.storeDir)) {
+      fse.mkdirpSync(this.storeDir)
+    }
   }
 
   // 安装
-  install() { }
+  async install() {
+    this.prepare();
+    return npminstall({
+      root: this.targetPath,
+      storeDir: this.storeDir,
+      rigistry: getDefaultRegistry(),
+      pkgs: [{ name: this.pakcageName, version: this.packageVersion }]
+    })
+  }
 
   // 更新
-  update() { }
+  async update() {
+    this.prepare();
+
+    const lastVersion = getNpmLastVersionSync(this.pakcageName);
+    const lastVersionPath = this.getSpecificCacheFilePath(lastVersion);
+    const lastVersionFilePath = path.resolve(this.storeDir, lastVersionPath);
+
+    // 只有当前缓存中没有最新的包时，才更新
+    if (!pathExists(lastVersionFilePath)) {
+      await npminstall({
+        root: this.targetPath,
+        storeDir: this.storeDir,
+        rigistry: getDefaultRegistry(),
+        pkgs: [{ name: this.pakcageName, version: this.lastVersion }]
+      })
+    }
+    this.packageVersion = lastVersion;
+  }
 
   // 路径是否存在
-  isExists() { }
+  isExists() {
+    if (this.storeDir) {
+      this.prepare();
+      return pathExists(this.cacheFilePath)
+    } else {
+      return pathExists(this.targetPath)
+    }
+  }
 
   // 获取根路径
   getRootFilePath() {
-    if (this.targetPath) {
-      const dir = pkgDir(this.targetPath);
-      return pathExists(dir) ? dir : null
+
+    function _getRootPath(filePath) {
+      const dir = pkgDir(filePath);
+
+      if (dir) {
+        const pkg = require(path.resolve(dir, 'package.json'))
+        const enterFilePath = path.resolve(dir, pkg.main);
+        return pathExists(enterFilePath) ? enterFilePath : null
+      }
+    }
+    if (this.storeDir) {
+      return _getRootPath(this.cacheFilePath);
+    } else {
+      return _getRootPath(this.targetPath);
     }
   }
 

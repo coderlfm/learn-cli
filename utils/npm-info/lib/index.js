@@ -6,36 +6,45 @@ const urlJoin = require('url-join');
 const execSync = require('child_process').execSync
 
 /**
+ * 获取最新的版本号
+ * @param {string} npmName 包名
+ * @returns lastVersion
+ */
+function getNpmLastVersionSync(npmName) {
+  return execSync(`npm view ${npmName} version`).toString().trim()
+}
+
+/**
  * 获取npm最新包版本 同步方式
  * @param {string} currentVersion 当前版本
  * @param {string} npmName npm包名
- * @returns 
+ * @returns
  */
 function getNpmVersionSync(currentVersion, npmName) {
-  const newVserion = execSync(`npm view ${npmName} version`).toString().trim()
+  const newVserion = getNpmLastVersionSync(npmName)
   return semver.gt(newVserion, currentVersion) ? newVserion : null
 }
 
 /**
  * 获取 npm 信息
  * @param {string} npmName npm包名
- * @param {string} original 目标地址 npmjs 或者 npm.taobao  
- * @returns 
+ * @param {string} original 目标地址 npmjs 或者 npm.taobao
+ * @returns
  */
 async function getNpmInfo(npmName, original) {
-  return await axios.get(urlJoin(original || 'https://registry.npmjs.org/', npmName))
+  return await axios.get(urlJoin(original, npmName))
 }
 
 /**
  * 获取npm最新包版本
  * @param {string} currentVersion 当前版本
  * @param {string} npmName npm包名
- * @returns 
+ * @returns
  */
 async function getNpmVersion(currentVersion, npmName) {
 
   try {
-    const { data } = await getNpmInfo(npmName)
+    const { data } = await getNpmInfo(npmName, getDefaultRegistry())
     const releaseVersion = getSemverVersion(currentVersion, data.versions)
     return releaseVersion.length ? releaseVersion[0] : null
 
@@ -57,8 +66,13 @@ function getSemverVersion(currentVersion, versions) {
     .sort((a, b) => semver.gt(b, a) ? 1 : -1)                           //  按版本倒序
 }
 
+function getDefaultRegistry(original) {
+  return original ? 'https://registry.npm.taobao.org/' : 'https://registry.npmjs.org/'
+}
 
 module.exports = {
   getNpmVersion,
-  getNpmVersionSync
+  getNpmVersionSync,
+  getDefaultRegistry,
+  getNpmLastVersionSync
 };
