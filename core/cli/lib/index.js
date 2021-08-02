@@ -3,7 +3,7 @@ const path = require('path')
 
 const { log } = require('@sunshine-cli-dev/utils')
 const { getNpmVersion, getNpmVersionSync } = require('@sunshine-cli-dev/npm-info')
-const exec = require('@sunshine-cli-dev/init')
+const exec = require('@sunshine-cli-dev/exec')
 const semver = require('semver')
 const colors = require('colors')
 const rootCheck = require('root-check')

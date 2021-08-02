@@ -20,9 +20,9 @@
     "registry": "https://registry.npm.taobao.org/"
   },
   "dependencies": {
+    "@sunshine-cli-dev/exec": "link:..\\exec",
     "@sunshine-cli-dev/npm-info": "file:../../utils/npm-info",
     "@sunshine-cli-dev/utils": "file:../../utils/utils",
-    "@sunshine-cli-dev/init": "file:../../commands/init",
     "colors": "^1.4.0",
     "commander": "^8.1.0",
     "dotenv": "^10.0.0",

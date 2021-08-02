@@ -3,7 +3,7 @@ lockfileVersion: 5.3
 specifiers:
   '@babel/core': ^7.14.8
   '@babel/preset-env': ^7.14.8
-  '@sunshine-cli-dev/init': file:../../commands/init
+  '@sunshine-cli-dev/exec': link:..\exec
   '@sunshine-cli-dev/npm-info': file:../../utils/npm-info
   '@sunshine-cli-dev/utils': file:../../utils/utils
   babel-loader: ^8.2.2
@@ -21,7 +21,7 @@ specifiers:
   webpack-cli: ^4.7.2
 
 dependencies:
-  '@sunshine-cli-dev/init': link:../../commands/init
+  '@sunshine-cli-dev/exec': link:../exec
   '@sunshine-cli-dev/npm-info': link:../../utils/npm-info
   '@sunshine-cli-dev/utils': link:../../utils/utils
   colors: 1.4.0

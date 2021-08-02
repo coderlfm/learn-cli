@@ -1,8 +1,8 @@
 'use strict';
 
-module.exports = exec;
+module.exports = init;
 
-function exec(souce, destination, objCmd) {
-    console.log('exec');
-    console.log('targetPath', process.env.CLI_TARGET_PATH);
+
+function init() {
+    console.log('init 初始化');
 }
