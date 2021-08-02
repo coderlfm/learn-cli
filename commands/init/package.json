@@ -1,7 +1,10 @@
 {
-  "name": "@sunshine-cli-dev/npm-info",
+  "name": "@sunshine-cli-dev/init",
   "version": "0.0.0",
-  "description": "npm info",
+  "description": "init",
+  "keywords": [
+    "init"
+  ],
   "author": "宿愿Cc <375642570@qq.com>",
   "homepage": "https://github.com/coderlfm/learn-cli#readme",
   "license": "ISC",
@@ -13,6 +16,9 @@
   "files": [
     "lib"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/coderlfm/learn-cli.git"
@@ -22,11 +28,5 @@
   },
   "bugs": {
     "url": "https://github.com/coderlfm/learn-cli/issues"
-  },
-  "dependencies": {
-    "axios": "^0.21.1",
-    "child_process": "^1.0.2",
-    "semver": "^7.3.5",
-    "url-join": "^4.0.1"
   }
 }

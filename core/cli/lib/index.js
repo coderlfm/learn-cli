@@ -3,6 +3,7 @@ const path = require('path')
 
 const { log } = require('@sunshine-cli-dev/utils')
 const { getNpmVersion, getNpmVersionSync } = require('@sunshine-cli-dev/npm-info')
+const exec = require('@sunshine-cli-dev/init')
 const semver = require('semver')
 const colors = require('colors')
 const rootCheck = require('root-check')
@@ -23,20 +24,22 @@ module.exports = cli;
 async function cli(argv) {
 
   try {
-    checkPkgVersion();
-    checkNodeVersion();
-    checkRoot();
-    checkUserHome();
-    // checkInputArgs();
-    checkEnv();
-    await checkVersionUpdate();
+    prepare();
     registryCommand();
-    log.verbose('test', 'test debug')
+    // log.verbose('test', 'test debug')
   } catch (error) {
     // 自定义错误处理
     log.error(error.message)
     log.verbose(error)
   }
+}
+
+async function prepare() {
+  checkPkgVersion();
+  checkNodeVersion();
+  checkRoot();
+  checkUserHome();
+  // await checkVersionUpdate();
 }
 
 function registryCommand() {
@@ -45,7 +48,7 @@ function registryCommand() {
     .usage('install')
     .version(pkg.version)
     .option('-d, --debug', '开启 debug 模式', false)  // 选项默认值
-    .option('-tp, --targetPath', '本地地址')
+    .option('-tp, --targetPath <targetPath>', '是否指定本地调试文件路径', '');
 
 
   // 注册命令
@@ -53,10 +56,7 @@ function registryCommand() {
     .command('init')
     .description('初始化项目')
     .argument('[projectName]', '项目名称')
-    .action((souce, destination, objCmd) => {          // 命令处理函数
-      // console.log('初始化', objCmd);
-      // console.log('souce:', souce, 'destination:', destination, 'objCmd:', objCmd);
-    })
+    .action(exec)
 
   // 自定义事件监听
   program.on('option:debug', (e) => {
@@ -66,6 +66,12 @@ function registryCommand() {
       process.env.LOG_LEVEL = 'info'
     }
     log.level = process.env.LOG_LEVEL;
+  })
+
+  // 自定义事件监听
+  program.on('option:targetPath', (e) => {
+    // console.log("targetPath:", e, prgitogram.opts().targetPath);
+    process.env.CLI_TARGET_PATH = e;
   })
 
   program.on('command:*', (params) => {

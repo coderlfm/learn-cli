@@ -3,7 +3,8 @@ lockfileVersion: 5.3
 specifiers:
   '@babel/core': ^7.14.8
   '@babel/preset-env': ^7.14.8
-  '@sunshine-cli-dev/npm-info': link:..\..\utils\npm-info
+  '@sunshine-cli-dev/init': file:../../commands/init
+  '@sunshine-cli-dev/npm-info': file:../../utils/npm-info
   '@sunshine-cli-dev/utils': file:../../utils/utils
   babel-loader: ^8.2.2
   colors: ^1.4.0
@@ -11,7 +12,6 @@ specifiers:
   core-js: ^3.16.0
   dotenv: ^10.0.0
   import-local: ^3.0.2
-  minimist: ^1.2.5
   path-exists: ^4.0.0
   regenerator-runtime: ^0.13.9
   root-check: 1.0.0
@@ -21,13 +21,13 @@ specifiers:
   webpack-cli: ^4.7.2
 
 dependencies:
+  '@sunshine-cli-dev/init': link:../../commands/init
   '@sunshine-cli-dev/npm-info': link:../../utils/npm-info
   '@sunshine-cli-dev/utils': link:../../utils/utils
   colors: 1.4.0
   commander: 8.1.0
   dotenv: 10.0.0
   import-local: 3.0.2
-  minimist: 1.2.5
   path-exists: 4.0.0
   root-check: 1.0.0
   semver: 7.3.5
@@ -1918,6 +1918,7 @@ packages:
 
   /minimist/1.2.5:
     resolution: {integrity: sha512-FM9nNUYrRBAELZQT3xeZQ7fmMOBg6nWNmJKTcgsJeaLstP/UODVpGsr5OhXhhXg6f+qtJ8uiZ+PUxkDWcgIXLw==}
+    dev: true
 
   /ms/2.1.2:
     resolution: {integrity: sha512-sGkPx+VjMtmA6MX27oA4FBFELFCZZ4S4XqeGOXCv68tT+jb3vk/RyaKWP0PTKyWtmLSM0b+adUTEvbs1PEaH2w==}
