@@ -5,7 +5,7 @@ const pathExists = require('path-exists').sync
 const fse = require('fs-extra')
 const npminstall = require('npminstall')
 
-const { isObject } = require('@sunshine-cli-dev/utils');
+const { isObject, formPath } = require('@sunshine-cli-dev/utils');
 const { getDefaultRegistry, getNpmLastVersionSync } = require('@sunshine-cli-dev/npm-info')
 
 class Package {
@@ -104,7 +104,7 @@ class Package {
       if (dir) {
         const pkg = require(path.resolve(dir, 'package.json'))
         const enterFilePath = path.resolve(dir, pkg.main);
-        return pathExists(enterFilePath) ? enterFilePath : null
+        return pathExists(enterFilePath) ? formPath(enterFilePath) : null
       }
     }
     if (this.storeDir) {

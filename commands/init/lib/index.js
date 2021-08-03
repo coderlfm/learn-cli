@@ -9,7 +9,7 @@ class IninCommand extends Command {
   init() {
     this.projectName = this._argv;
     this.force = this._cmd.force;
-
+    console.log('init');
     console.log(this.projectName, this.force);
   }
 

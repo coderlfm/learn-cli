@@ -1,6 +1,9 @@
 'use strict';
 const path = require('path');
+const cp = require('child_process')
 const Package = require('@sunshine-cli-dev/package')
+const log = require('@sunshine-cli-dev/log')
+const { exec: spawn } = require('@sunshine-cli-dev/utils')
 
 module.exports = exec;
 
@@ -54,7 +57,46 @@ async function exec(souce, destination, objCmd) {
   console.log('file:', filePath);
   if (filePath) {
     // 加载文件
+    // require(filePath).call(null, Array.from(arguments));
     console.log('加载文件');
-    require(filePath).call(null, Array.from(arguments));
+
+    try {
+
+      const args = Array.from(arguments);
+      const cmd = args[args.length - 1];
+      const o = Object.create(null);
+      Object.keys(cmd).forEach(key => {
+        if (
+          cmd.hasOwnProperty(key) &&
+          !key.startsWith('_') &&
+          key !== 'parent'
+        ) {
+          o[key] = cmd[key];
+        }
+      })
+
+      args[args.length - 1] = o;
+      // console.log(args);
+
+      // 注意需要引号
+      const code = `require('${filePath}').call(null, ${JSON.stringify(args)})`;
+
+      const child = spawn('node', ['-e', code], { cwd: process.cwd(), stdio: 'inherit' })
+
+
+      child.on('error', e => {
+        log.error('发生错误', e.message);
+        process.exit(1)
+      })
+
+      child.on('exit', (e) => {
+        log.verbose('命令执行成功', e)
+        process.exit(e)
+      })
+      // 改造，使用 多进程执行
+    } catch (error) {
+      log.error('error', error)
+    }
+
   }
 }

@@ -7,7 +7,7 @@ const LOWEST_NODE_VERSION = "12.0.0";
 
 class Command {
   constructor(argv) {
-    console.log('command:', argv);
+    // console.log('command:', argv);
 
     if (!argv) throw new Error(colors.reset('参数不能为空'))
     if (!Array.isArray(argv)) throw new Error(colors.reset('参数必须为数组'))
@@ -45,7 +45,7 @@ class Command {
   initArgv() {
     this._cmd = this._argv[this._argv.length - 1];
     this._argv = this._argv[0];
-    console.log(this._cmd, this._argv);
+    // console.log(this._cmd, this._argv);
   }
 
   init() {
