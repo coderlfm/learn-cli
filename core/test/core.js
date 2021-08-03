@@ -10,8 +10,8 @@ const userHome = require('user-home')
 const pathExists = require('path-exists').sync
 const dotenv = require('dotenv')
 
-const pkg = require('../package.json')
-const constant = require('./constant')
+const pkg = require('../cli/package.json')
+const constant = require('../cli/lib/constant')
 
 const command = require('./command')
 

@@ -1,10 +1,9 @@
 'use strict';
 const path = require('path')
 
-const { log } = require('@sunshine-cli-dev/log')
+const log = require('@sunshine-cli-dev/log')
 const { getNpmVersion, getNpmVersionSync } = require('@sunshine-cli-dev/npm-info')
 const exec = require('@sunshine-cli-dev/exec')
-const semver = require('semver')
 const colors = require('colors')
 const rootCheck = require('root-check')
 const userHome = require('user-home')
@@ -38,7 +37,6 @@ async function cli(argv) {
 
 async function prepare() {
   checkPkgVersion();
-  checkNodeVersion();
   checkRoot();
   checkEnv();
   checkUserHome();
@@ -158,16 +156,7 @@ function checkRoot() {
   // console.log('getuid:', process.getuid);
 }
 
-/**
- * 校验最低 node 版本
- */
-function checkNodeVersion() {
-  const currentVersion = process.version;
-  const lowestVsrion = constant.LOWEST_NODE_VERSION;
-  if (!semver.gte(currentVersion, lowestVsrion)) {
-    throw new Error(colors.red(`sunshine cli 需要安装 v${lowestVsrion} 以上的 node 版本`))
-  }
-}
+
 
 /**
  * 检测当前版本号

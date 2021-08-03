@@ -1,9 +1,9 @@
-/* 
+/*
   command 的基本使用
  */
 
 const commander = require('commander');
-const pkg = require('../package.json')
+const pkg = require('../cli/package.json')
 
 const { program } = commander
 

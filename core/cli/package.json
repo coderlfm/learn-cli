@@ -29,7 +29,6 @@
     "import-local": "^3.0.2",
     "path-exists": "^4.0.0",
     "root-check": "1.0.0",
-    "semver": "^7.3.5",
     "user-home": "^3.0.0",
     "webpack": "^5.47.1",
     "webpack-cli": "^4.7.2"

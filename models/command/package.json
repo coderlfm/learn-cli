@@ -1,10 +1,7 @@
 {
-  "name": "@sunshine-cli-dev/init",
+  "name": "@sunshine-cli-dev/command",
   "version": "0.0.0",
-  "description": "init",
-  "keywords": [
-    "init"
-  ],
+  "description": "> TODO: description",
   "author": "宿愿Cc <375642570@qq.com>",
   "homepage": "https://github.com/coderlfm/learn-cli#readme",
   "license": "ISC",
@@ -30,7 +27,8 @@
     "url": "https://github.com/coderlfm/learn-cli/issues"
   },
   "dependencies": {
-    "@sunshine-cli-dev/log": "file:../../utils/log",
-    "@sunshine-cli-dev/command": "file:../../models/command"
+    "@sunshine-cli-dev/log": "link:..\\..\\utils\\log",
+    "colors": "^1.4.0",
+    "semver": "^7.3.5"
   }
 }

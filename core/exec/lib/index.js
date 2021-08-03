@@ -51,10 +51,10 @@ async function exec(souce, destination, objCmd) {
   }
 
   const filePath = pkg.getRootFilePath()
-  console.log(filePath);
+  console.log('file:', filePath);
   if (filePath) {
     // 加载文件
     console.log('加载文件');
-    require(filePath).apply(null, arguments);
+    require(filePath).call(null, Array.from(arguments));
   }
 }
