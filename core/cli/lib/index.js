@@ -56,6 +56,7 @@ function registryCommand() {
   program
     .command('init')
     .description('初始化项目')
+    .option('-f, --force', '是否强制初始化项目')
     .argument('[projectName]', '项目名称')
     .action(exec)
 

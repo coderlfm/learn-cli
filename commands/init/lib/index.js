@@ -6,7 +6,16 @@ const log = require('@sunshine-cli-dev/log')
 module.exports = init;
 
 class IninCommand extends Command {
+  init() {
+    this.projectName = this._argv;
+    this.force = this._cmd.force;
 
+    console.log(this.projectName, this.force);
+  }
+
+  exec() {
+    console.log('exec');
+  }
 }
 
 function init(argv) {
