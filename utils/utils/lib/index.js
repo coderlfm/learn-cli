@@ -6,6 +6,11 @@ function isObject(o) {
   return Object.prototype.toString.call(0)
 }
 
+/**
+ * 路径转换，兼容win
+ * @param {string} p 路径转换
+ * @returns
+ */
 function formPath(p) {
   if (path.sep !== "/") {
     return p.replace(/\\/g, '/')
@@ -14,7 +19,7 @@ function formPath(p) {
 }
 
 /**
- * 执行命令
+ * 执行命令，兼容 win
  * @param {*} cmd
  * @param {*} args
  * @param {*} options

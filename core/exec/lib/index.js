@@ -74,6 +74,9 @@ async function exec(souce, destination, objCmd) {
           o[key] = cmd[key];
         }
       })
+      // 存储 options 选项
+      // o.opts = JSON.stringify(cmd.opts());
+      o.opts = cmd.opts();
 
       args[args.length - 1] = o;
       // console.log(args);

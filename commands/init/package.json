@@ -30,7 +30,10 @@
     "url": "https://github.com/coderlfm/learn-cli/issues"
   },
   "dependencies": {
+    "@sunshine-cli-dev/command": "file:../../models/command",
     "@sunshine-cli-dev/log": "file:../../utils/log",
-    "@sunshine-cli-dev/command": "file:../../models/command"
+    "fs-extra": "^10.0.0",
+    "inquirer": "^8.1.2",
+    "semver": "^7.3.5"
   }
 }

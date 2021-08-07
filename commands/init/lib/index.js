@@ -82,7 +82,7 @@ class IninCommand extends Command {
 
     if (type === TYPE_PROJECT) {
       console.log('创建项目');
-      const { name, version } = await inrequirer.prompt([
+      const { name, version, template } = await inrequirer.prompt([
         // 项目名称需要兼容，用户是否在命令行输入
         {
           type: 'input',
@@ -105,8 +105,14 @@ class IninCommand extends Command {
             done(null, true);
           }
         },
+        {
+          type: 'list',
+          name: 'template',
+          message: '请输入版本号项目模板',
+          choices: [{ value: 'vue', name: 'vue2标准', }, { value: 'vue-admin', name: 'vue2后台管理' }]
+        }
       ])
-      log.verbose('name:', name, 'version:', version);
+      log.verbose('name:', name, 'version:', version, 'template:', template);
       // console.log('name:', name, 'version:', version);
 
     } else if (type === TYPE_COMPONENT) {

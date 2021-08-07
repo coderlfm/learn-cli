@@ -44,6 +44,7 @@ class Package {
 
   // 处理 latest 版本号
   prepare() {
+    // 只有版本号是 latest 时才处理，否则使用传入的版本号
     if (this.packageVersion === 'latest') {
       this.packageVersion = getNpmLastVersionSync(this.pakcageName);
     }

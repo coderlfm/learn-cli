@@ -48,8 +48,9 @@ function registryCommand() {
     .name('sunshine-cli-dev')
     .usage('install')
     .version(pkg.version)
+    // 需要注意的是，全局的 options 在 cmd 对象中获取不到，cmd 对象只能获取到当前命令下的 option
     .option('-d, --debug', '开启 debug 模式', false)  // 选项默认值
-    .option('-tp, --targetPath <targetPath>', '是否指定本地调试文件路径', '');
+    .option('-tp, --targetPath <targetPath>', '是否指定本地调试文件路径', '')
 
 
   // 注册命令
@@ -62,7 +63,8 @@ function registryCommand() {
 
   // 自定义事件监听
   program.on('option:debug', (e) => {
-    if (program.opts()) {
+    console.log('开启debug');
+    if (program.opts().debug) {
       process.env.LOG_LEVEL = 'verbose'
     } else {
       process.env.LOG_LEVEL = 'info'
@@ -72,7 +74,7 @@ function registryCommand() {
 
   // 自定义事件监听
   program.on('option:targetPath', (e) => {
-    // console.log("targetPath:", e, prgitogram.opts().targetPath);
+    // console.log("targetPath:", e, program.opts().targetPath);
     process.env.CLI_TARGET_PATH = program.opts().targetPath;
   })
 
