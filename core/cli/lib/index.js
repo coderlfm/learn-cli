@@ -117,7 +117,7 @@ async function checkVersionUpdate() {
  * 判断是否有 .env 文件
  */
 function checkEnv() {
-  const dotenvPath = path.resolve(process.cwd(), '.env');
+  const dotenvPath = path.resolve(userHome, '.env');
   if (pathExists(dotenvPath)) {
     dotenv.config({ path: dotenvPath });
   }
@@ -147,7 +147,7 @@ function checkUserHome() {
   if (!userHome || !pathExists(userHome)) {
     throw new Error(colors.red(`当前登录用户主目录不存在`));
   }
-  // console.log('用户主目录:', userHome);
+  console.log('用户主目录:', userHome);
 }
 
 /**

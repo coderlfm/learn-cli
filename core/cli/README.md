@@ -8,6 +8,7 @@
     CLI_HOME_PATH: 全局缓存目录，会和用户主目录做拼接，如没有设置默认为 .sunshine-cli
     LOG_LEVEL: debug 模式
     CLI_TARGET_PATH: 本地模式路径
+    SUNSHILE_CLI_BASE_URL: base_url
 ```
 
 
