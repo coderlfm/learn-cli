@@ -7,6 +7,8 @@ const semver = require('semver');
 
 const Command = require('@sunshine-cli-dev/command')
 const log = require('@sunshine-cli-dev/log')
+const request = require('@sunshine-cli-dev/request');
+const { throws } = require('assert');
 
 const TYPE_PROJECT = 'project';
 const TYPE_COMPONENT = 'component';
@@ -24,8 +26,13 @@ class IninCommand extends Command {
   }
 
   async preParse() {
-    const localPath = process.cwd();
 
+    // 预先获取模板
+    const { data } = await request({ url: '/project' })
+    if (!data || !data.length) throw new Error('暂无模板')
+    this.templateList = data;
+
+    const localPath = process.cwd();
     if (!this.dirIsEmpty(localPath)) {
       let isContinue;
 
@@ -66,9 +73,6 @@ class IninCommand extends Command {
   async getProjectInfo() {
 
     // 校验项目名称是否合法
-    function _isValidName(v) {
-      return /^[a-zA-Z]+([-][a-zA-Z][a-zA-Z0-9]*|[_][a-zA-Z][a-zA-Z0-9]*|[a-zA-Z0-9])*$/.test(v);
-    }
 
     const { type } = await inrequirer.prompt({
       type: 'list',
@@ -80,47 +84,59 @@ class IninCommand extends Command {
       ]
     })
 
-    if (type === TYPE_PROJECT) {
-      console.log('创建项目');
-      const { name, version, template } = await inrequirer.prompt([
-        // 项目名称需要兼容，用户是否在命令行输入
-        {
-          type: 'input',
-          name: 'name',
-          message: '请输入项目名称',
-          validate: function (v) {
-            const done = this.async();
-            if (!_isValidName(v)) return done('请输入规范的项目名称');
-            done(null, true);
-          }
-        },
-        {
-          type: 'input',
-          name: 'version',
-          message: '请输入版本号',
-          default: '1.0.0',
-          validate: function (v) {
-            const done = this.async();
-            if (!semver.valid(v)) return done('请输入合法的版本号');
-            done(null, true);
-          }
-        },
-        {
-          type: 'list',
-          name: 'template',
-          message: '请输入版本号项目模板',
-          choices: [{ value: 'vue', name: 'vue2标准', }, { value: 'vue-admin', name: 'vue2后台管理' }]
-        }
-      ])
-      log.verbose('name:', name, 'version:', version, 'template:', template);
-      // console.log('name:', name, 'version:', version);
+    switch (type) {
+      case TYPE_PROJECT: await this.createProject(); break;
+      case TYPE_COMPONENT: await this.createComponent(); break;
+    }
+  }
 
-    } else if (type === TYPE_COMPONENT) {
-      console.log('创建组件');
+  // 创建项目
+  async createProject() {
+    console.log('创建项目');
+
+    function _isValidName(v) {
+      return /^[a-zA-Z]+([-][a-zA-Z][a-zA-Z0-9]*|[_][a-zA-Z][a-zA-Z0-9]*|[a-zA-Z0-9])*$/.test(v);
     }
 
-    // console.log(type);
+    const { name, version, template } = await inrequirer.prompt([
+      // 项目名称需要兼容，用户是否在命令行输入
+      {
+        type: 'input',
+        name: 'name',
+        message: '请输入项目名称',
+        validate: function (v) {
+          const done = this.async();
+          if (!_isValidName(v)) return done('请输入规范的项目名称');
+          done(null, true);
+        }
+      },
+      {
+        type: 'input',
+        name: 'version',
+        message: '请输入版本号',
+        default: '1.0.0',
+        validate: function (v) {
+          const done = this.async();
+          if (!semver.valid(v)) return done('请输入合法的版本号');
+          done(null, true);
+        }
+      },
+      {
+        type: 'list',
+        name: 'template',
+        message: '请输入版本项目模板',
+        choices: this.templateList
+      }
+    ])
+    log.verbose('name:', name, 'version:', version, 'template:', template);
+    // console.log('name:', name, 'version:', version);
   }
+
+  // 创建组件
+  async createComponent() {
+
+  }
+
 }
 
 function init(argv) {

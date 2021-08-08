@@ -32,6 +32,7 @@
   "dependencies": {
     "@sunshine-cli-dev/command": "file:../../models/command",
     "@sunshine-cli-dev/log": "file:../../utils/log",
+    "@sunshine-cli-dev/request": "file:../../utils/request",
     "fs-extra": "^10.0.0",
     "inquirer": "^8.1.2",
     "semver": "^7.3.5"
