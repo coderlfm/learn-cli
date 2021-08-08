@@ -1,14 +1,17 @@
 'use strict';
 
 const fs = require('fs');
+const path = require('path')
 const fse = require('fs-extra');
 const inrequirer = require('inquirer');
 const semver = require('semver');
+const userHome = require('user-home')
 
 const Command = require('@sunshine-cli-dev/command')
 const log = require('@sunshine-cli-dev/log')
 const request = require('@sunshine-cli-dev/request');
-const { throws } = require('assert');
+const Package = require('@sunshine-cli-dev/package')
+const { startSpinner, sleep } = require('@sunshine-cli-dev/utils')
 
 const TYPE_PROJECT = 'project';
 const TYPE_COMPONENT = 'component';
@@ -92,17 +95,17 @@ class IninCommand extends Command {
 
   // 创建项目
   async createProject() {
-    console.log('创建项目');
+    // console.log('创建项目');
 
     function _isValidName(v) {
       return /^[a-zA-Z]+([-][a-zA-Z][a-zA-Z0-9]*|[_][a-zA-Z][a-zA-Z0-9]*|[a-zA-Z0-9])*$/.test(v);
     }
 
-    const { name, version, template } = await inrequirer.prompt([
+    const { projectName, projectVersion, template } = await inrequirer.prompt([
       // 项目名称需要兼容，用户是否在命令行输入
       {
         type: 'input',
-        name: 'name',
+        name: 'projectName',
         message: '请输入项目名称',
         validate: function (v) {
           const done = this.async();
@@ -112,7 +115,7 @@ class IninCommand extends Command {
       },
       {
         type: 'input',
-        name: 'version',
+        name: 'projectVersion',
         message: '请输入版本号',
         default: '1.0.0',
         validate: function (v) {
@@ -128,12 +131,54 @@ class IninCommand extends Command {
         choices: this.templateList
       }
     ])
-    log.verbose('name:', name, 'version:', version, 'template:', template);
-    // console.log('name:', name, 'version:', version);
+
+    log.verbose('projectName:', projectName, 'projectVersion:', projectVersion, 'template:', template);
+
+    this.projectInfo = {
+      type: TYPE_PROJECT,
+      projectName,
+      projectVersion,
+      npmName: template
+    }
+
+    this.downloadTemplate();
   }
 
   // 创建组件
   async createComponent() {
+
+  }
+
+  // 下载项目模板
+  async downloadTemplate() {
+    console.log(userHome);
+
+    const { npmName, projectVersion } = this.projectInfo
+    const targetPath = path.resolve(userHome, '.sunshine-cli-dev', 'template');
+    const storeDir = path.resolve(targetPath, 'node_modules');
+
+    const pkg = new Package({
+      pakcageName: npmName,
+      packageVersion: 'latest',    // 只有填写指定版本才能够显示更新 如：1.0.1，此处不通过服务端来获取版本号
+      targetPath,
+      storeDir,
+    });
+
+    // 区分，安装和更新
+    const isUpload = pkg.isExists();
+    const msg = isUpload ? '更新' : '安装';
+
+    const spinner = startSpinner(`模板${msg}中...`)
+    try {
+      isUpload ? await pkg.update() : await pkg.install();
+      await sleep(3000);
+      console.log();
+      log.info(`模板${msg}成功`);
+    } catch (error) {
+      log.error(error.message);
+    } finally {
+      spinner.stop(true);
+    }
 
   }
 

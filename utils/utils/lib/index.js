@@ -1,6 +1,7 @@
 'use strict';
 const { spawn } = require('child_process')
 const path = require('path')
+const Spinner = require('cli-spinner').Spinner
 
 function isObject(o) {
   return Object.prototype.toString.call(0)
@@ -35,8 +36,34 @@ function exec(cmd, args, options) {
   return spawn(cmd, args, options || {})
 }
 
+
+/**
+ * 开启 loading
+ * @param {string} msg loading占位字符串
+ * @param {string} spinnerString loading 样式
+ * @returns spinner 对象
+ */
+function startSpinner(msg = '', spinnerString = '|/-\\') {
+  const spinner = new Spinner(`${msg} %s`);
+  spinner.setSpinnerString(spinnerString);
+  spinner.start();
+
+  return spinner;
+}
+
+/**
+ * 睡眠
+ * @param {number} delay 延迟时间
+ * @returns
+ */
+function sleep(delay = 1000) {
+  return new Promise(resolve => setTimeout(resolve, delay))
+}
+
 module.exports = {
   isObject,
   exec,
   formPath,
+  startSpinner,
+  sleep,
 }

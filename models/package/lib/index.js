@@ -100,8 +100,10 @@ class Package {
   getRootFilePath() {
 
     function _getRootPath(filePath) {
-      const dir = pkgDir(filePath);
 
+      // 此处 windows 上输入 unix 形式的路径( /c/test-project/test )
+      // 在 cmd 的命令行会解析失败,可使用 git bash 或者 输入 windows 形式路径 ( E:\\learn\\learn-cli )
+      const dir = pkgDir(filePath);
       if (dir) {
         const pkg = require(path.resolve(dir, 'package.json'))
         const enterFilePath = path.resolve(dir, pkg.main);

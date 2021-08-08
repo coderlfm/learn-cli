@@ -20,5 +20,6 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "dependencies": {
+    "cli-spinner": "^0.2.10"
   }
 }
