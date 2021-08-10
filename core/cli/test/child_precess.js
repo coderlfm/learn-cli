@@ -8,7 +8,7 @@ const colors = require('colors')
 // console.log(err, stdout, stderr);
 // })
 
-const child = cp.execSync('ls')
+// const child = cp.execSync('ls')
 
 /*
 const child = cp.exec('ls', (err, stdout, stderr) => {
@@ -68,6 +68,20 @@ child.on('error', e => {
 
 // spawn 返回的是一个流
 // const child = cp.spawn('ls', ['-l'])
+// const child = cp.spawn('node', ['test.js', '--version'], {
+//   stdio: 'inherit'
+// })
+const child = cp.spawn('cmd.exe', ['node test.js && node --version',], {
+  stdio: 'inherit'
+})
+child.on('error', e => {
+  console.log(e);
+})
+child.on('exit', e => {
+  console.log(e);
+})
+
+
 
 
 // // 监听成功，会不断监听流的消息
