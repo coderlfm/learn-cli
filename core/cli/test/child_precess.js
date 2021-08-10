@@ -71,6 +71,7 @@ child.on('error', e => {
 // const child = cp.spawn('node', ['test.js', '--version'], {
 //   stdio: 'inherit'
 // })
+
 const child = cp.spawn('cmd.exe', ['node test.js && node --version',], {
   stdio: 'inherit'
 })
