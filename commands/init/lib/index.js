@@ -25,9 +25,18 @@ class IninCommand extends Command {
 
   async exec() {
     console.log('exec');
-    await this.preParse()
+    const projectInfo =  await this.preParse()
+
+    if(!projectInfo) return;
+
+    // 下载/更新模板
+    await this.downloadTemplate(projectInfo)
+
+    // 安装模板到当前目录
+    await this.installTemplate();
   }
 
+  // 校验是否空文件夹及初始化项目
   async preParse() {
 
     // 预先获取模板
@@ -73,6 +82,7 @@ class IninCommand extends Command {
     return dirs.length === 0
   }
 
+   // 询问选择项目或者模板，获取项目或者模板的信息
   async getProjectInfo() {
 
     // 校验项目名称是否合法
@@ -87,10 +97,12 @@ class IninCommand extends Command {
       ]
     })
 
+    let projectInfo;
     switch (type) {
-      case TYPE_PROJECT: await this.createProject(); break;
-      case TYPE_COMPONENT: await this.createComponent(); break;
+      case TYPE_PROJECT: projectInfo = await this.createProject(); break;
+      case TYPE_COMPONENT: projectInfo = await this.createComponent(); break;
     }
+    return projectInfo
   }
 
   // 创建项目
@@ -134,14 +146,23 @@ class IninCommand extends Command {
 
     log.verbose('projectName:', projectName, 'projectVersion:', projectVersion, 'template:', template);
 
-    this.projectInfo = {
+    // 项目信息
+    // this.projectInfo = {
+    //   type: TYPE_PROJECT,
+    //   projectName,
+    //   projectVersion,
+    //   npmName: template
+    // }
+
+    const projectInfo = {
       type: TYPE_PROJECT,
       projectName,
       projectVersion,
       npmName: template
     }
 
-    this.downloadTemplate();
+    // this.downloadTemplate();
+    return projectInfo;
   }
 
   // 创建组件
@@ -149,15 +170,15 @@ class IninCommand extends Command {
 
   }
 
-  // 下载项目模板
-  async downloadTemplate() {
-    console.log(userHome);
+  // 下载/更新项目模板到缓存
+  async downloadTemplate(projectInfo) {
+    // console.log(userHome);
 
-    const { npmName, projectVersion } = this.projectInfo
+    const { npmName, projectVersion } = projectInfo
     const targetPath = path.resolve(userHome, '.sunshine-cli-dev', 'template');
     const storeDir = path.resolve(targetPath, 'node_modules');
 
-    const pkg = new Package({
+    const templatePkg = new Package({
       pakcageName: npmName,
       packageVersion: 'latest',    // 只有填写指定版本才能够显示更新 如：1.0.1，此处不通过服务端来获取版本号
       targetPath,
@@ -165,21 +186,40 @@ class IninCommand extends Command {
     });
 
     // 区分，安装和更新
-    const isUpload = pkg.isExists();
+    const isUpload = templatePkg.isExists();
     const msg = isUpload ? '更新' : '安装';
 
     const spinner = startSpinner(`模板${msg}中...`)
     try {
-      isUpload ? await pkg.update() : await pkg.install();
-      await sleep(3000);
+      isUpload ? await templatePkg.update() : await templatePkg.install();
+      // await sleep(3000);
       console.log();
-      log.info(`模板${msg}成功`);
+      spinner.stop(true);
+
+      // 记录当前选中的模板信息
+      this.templatePkg = templatePkg;
+
+      log.success(`模板${msg}成功`);
+
     } catch (error) {
       log.error(error.message);
-    } finally {
-      spinner.stop(true);
+      throw error;
     }
 
+  }
+
+  // 安装模板到当前目录
+  async installTemplate() {
+    console.log('安装模板', this.templatePkg);
+    const soucePath = path.resolve(this.templatePkg.cacheFilePath, 'template');
+    const targetPaht = process.cwd();
+    console.log('模板路径,',soucePath,'目标路径，', targetPaht);
+
+    // 判断路径是否为空，如果为空，则创建目录
+    fse.ensureDirSync(soucePath);
+    fse.ensureDirSync(targetPaht);
+
+    fse.copySync(soucePath,targetPaht);
   }
 
 }

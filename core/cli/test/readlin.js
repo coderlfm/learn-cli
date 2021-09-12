@@ -8,5 +8,5 @@ const rl = readline.createInterface({
 
 rl.question('请输入：', answer => {
   console.log(answer);
-  rl.close();
+  // rl.close();
 })
