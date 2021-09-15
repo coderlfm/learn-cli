@@ -30,13 +30,16 @@ class IninCommand extends Command {
   }
 
   async exec() {
-    console.log('exec');
+    // console.log('exec');
     const projectInfo = await this.preParse();
 
     if (!projectInfo) return;
 
+    // 缓存项目信息
+    this.projectInfo = projectInfo;
+
     // 下载/更新模板
-    await this.downloadTemplate(projectInfo);
+    await this.downloadTemplate(this.projectInfo);
 
     // 安装模板到当前目录
     await this.installTemplate();
@@ -63,7 +66,7 @@ class IninCommand extends Command {
             default: false,
           })
         ).isContinue;
-        console.log(isContinue);
+        // console.log(isContinue);
         if (!isContinue) return;
       }
 
@@ -84,7 +87,7 @@ class IninCommand extends Command {
   dirIsEmpty(path) {
     let dirs = fs.readdirSync(path);
     dirs = dirs.filter((dir) => !dir.startsWith('.') && !dir.includes('node_modules'));
-    console.log(dirs);
+    // console.log(dirs);
     return dirs.length === 0;
   }
 
@@ -153,25 +156,13 @@ class IninCommand extends Command {
       },
     ]);
 
-    log.verbose('projectName:', projectName, 'projectVersion:', projectVersion, 'template:', template);
-
-    // 项目信息
-    // this.projectInfo = {
-    //   type: TYPE_PROJECT,
-    //   projectName,
-    //   projectVersion,
-    //   npmName: template
-    // }
-
-    const projectInfo = {
-      type: TYPE_PROJECT,
+    return {
       projectName,
       projectVersion,
+      projectClassName: kebabCase(projectName),
+      type: TYPE_PROJECT,
       npmName: template,
     };
-
-    // this.downloadTemplate();
-    return projectInfo;
   }
 
   // 创建组件
@@ -197,6 +188,7 @@ class IninCommand extends Command {
     const msg = isUpload ? '更新' : '安装';
 
     const spinner = startSpinner(`模板${msg}中...`);
+
     try {
       isUpload ? await templatePkg.update() : await templatePkg.install();
       // await sleep(3000);
@@ -218,12 +210,12 @@ class IninCommand extends Command {
     // console.log('安装模板', this.templatePkg);
     const soucePath = path.resolve(this.templatePkg.cacheFilePath, 'template');
     const targetPaht = process.cwd();
-    // console.log('模板路径,',soucePath,'目标路径，', targetPaht);
 
     // 判断路径是否为空，如果为空，则创建目录
     fse.ensureDirSync(soucePath);
     fse.ensureDirSync(targetPaht);
 
+    // 拷贝模板到当前目录
     fse.copySync(soucePath, targetPaht);
 
     // ejs 模板引擎渲染
@@ -237,13 +229,27 @@ class IninCommand extends Command {
     try {
       // 匹配当前目录下的所有文件
       const files = await glob('**', { cwd: dir, nodir: true, ignore: ['**/node_modules/**', '**/public/**'] });
-      console.log('files', dir, files);
+      // log.verbose('files', dir, files);
+      log.verbose('this.projectInfo', this.projectInfo);
 
-      // const files = await ejs.renderFile(dir, {}, {});
+      // 批量渲染
+      await Promise.all(files.map((file) => _renderFile(path.resolve(dir, file), this.projectInfo)));
+
+      log.verbose('ejsrender end');
     } catch (error) {
       log.error(error.message);
       log.verbose(error);
       throw new Error(error);
+    }
+
+    async function _renderFile(filePath, renderData) {
+      try {
+        const data = await ejs.renderFile(filePath, renderData, {});
+        fse.writeFileSync(filePath, data);
+        return Promise.resolve();
+      } catch (error) {
+        return Promise.reject(error);
+      }
     }
   }
 }
