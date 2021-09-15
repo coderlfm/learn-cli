@@ -15,12 +15,17 @@ const Command = require('@sunshine-cli-dev/command');
 const log = require('@sunshine-cli-dev/log');
 const request = require('@sunshine-cli-dev/request');
 const Package = require('@sunshine-cli-dev/package');
-const { startSpinner, sleep } = require('@sunshine-cli-dev/utils');
+const { startSpinner, execPromise } = require('@sunshine-cli-dev/utils');
+const { loadavg } = require('os');
 
 glob = promisify(glob);
 
 const TYPE_PROJECT = 'project';
 const TYPE_COMPONENT = 'component';
+
+// 命令白名单
+const WHITE_COMMAND = ['npm', 'cnpm', 'pnpm', 'yarn'];
+
 class IninCommand extends Command {
   init() {
     this.projectName = this._argv;
@@ -43,6 +48,9 @@ class IninCommand extends Command {
 
     // 安装模板到当前目录
     await this.installTemplate();
+
+    // 项目启动
+    await this.start();
   }
 
   // 校验是否空文件夹及初始化项目
@@ -151,7 +159,7 @@ class IninCommand extends Command {
       {
         type: 'list',
         name: 'template',
-        message: '请输入版本项目模板',
+        message: '请选择项目模板',
         choices: this.templateList,
       },
     ]);
@@ -175,6 +183,9 @@ class IninCommand extends Command {
     const { npmName, projectVersion } = projectInfo;
     const targetPath = path.resolve(userHome, '.sunshine-cli-dev', 'template');
     const storeDir = path.resolve(targetPath, 'node_modules');
+
+    // 缓存当前选择模板
+    this.templateInfo = this.templateList.find((template) => template.value === npmName);
 
     const templatePkg = new Package({
       pakcageName: npmName,
@@ -218,8 +229,8 @@ class IninCommand extends Command {
     // 拷贝模板到当前目录
     fse.copySync(soucePath, targetPaht);
 
-    // ejs 模板引擎渲染
-    this.ejsRender();
+    // ejs 模板引擎渲染 package.json 名称及版本
+    await this.ejsRender();
   }
 
   // ejs模板渲染
@@ -229,19 +240,23 @@ class IninCommand extends Command {
     try {
       // 匹配当前目录下的所有文件
       const files = await glob('**', { cwd: dir, nodir: true, ignore: ['**/node_modules/**', '**/public/**'] });
-      // log.verbose('files', dir, files);
-      log.verbose('this.projectInfo', this.projectInfo);
+      // log.verbose('this.projectInfo', this.projectInfo);
 
       // 批量渲染
       await Promise.all(files.map((file) => _renderFile(path.resolve(dir, file), this.projectInfo)));
 
-      log.verbose('ejsrender end');
+      // log.verbose('ejsrender end');
     } catch (error) {
       log.error(error.message);
-      log.verbose(error);
       throw new Error(error);
     }
 
+    /**
+     * ejs渲染文件
+     * @param {String} filePath 需要渲染的文件路径
+     * @param {Object} renderData 渲染时传入的数据
+     * @returns Promise
+     */
     async function _renderFile(filePath, renderData) {
       try {
         const data = await ejs.renderFile(filePath, renderData, {});
@@ -251,6 +266,65 @@ class IninCommand extends Command {
         return Promise.reject(error);
       }
     }
+  }
+
+  /**
+   * 启动项目
+   */
+  async start() {
+    // execCommand;
+    log.verbose('当前模板', this.templateInfo);
+    const { installCommand, startCommand } = this.templateInfo;
+
+    // 获取安装及启动命令
+    let [intallCmd, ...intallArgs] = installCommand.split(' ');
+    let [startCmd, ...startArgs] = startCommand.split(' ');
+
+    // 校验命令是否在白名单
+    if (!_checkCommand(intallCmd)) return log.error('命令不存在', installCommand);
+    if (!_checkCommand(startCmd)) return log.error('命令不存在', startCommand);
+
+    // 格式化命令
+    intallCmd = _formatCommand(intallCmd);
+    startCmd = _formatCommand(startCmd);
+
+    log.verbose('install', intallCmd, intallArgs);
+    log.verbose('startCmd', startCmd, startArgs);
+
+    try {
+      await this.execCommand(intallCmd, intallArgs);
+      await this.execCommand(startCmd, startArgs);
+      log.verbose('安装成功');
+    } catch (error) {
+      log.verbose('安装错误', error);
+    }
+
+    /**
+     * 校验命令是否在白名单内
+     * @param {String} command 命令
+     * @returns Boolean
+     */
+    function _checkCommand(command) {
+      return WHITE_COMMAND.includes(command);
+    }
+
+    /**
+     * 格式化命令(兼容 win)
+     * @param {String} command 命令
+     */
+    function _formatCommand(command) {
+      return process.platform === 'win32' ? `${command}.cmd` : command;
+    }
+  }
+
+  /**
+   * 执行命令
+   * @param {String} cmd 命令
+   * @param {String []} args 参数
+   */
+  async execCommand(cmd, args) {
+    log.verbose('cmd, args:', cmd, args);
+    return await execPromise(cmd, args, { cwd: process.cwd(), stdio: 'inherit' });
   }
 }
 
