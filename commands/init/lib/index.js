@@ -28,10 +28,10 @@ const WHITE_COMMAND = ['npm', 'cnpm', 'pnpm', 'yarn'];
 
 class IninCommand extends Command {
   init() {
+    // 项目名，如果在命令行已经输入，且名称合法，可跳过输入项目名的过程
     this.projectName = this._argv;
     this.force = this._cmd.opts.force;
-    // console.log('init', this._cmd);
-    console.log(this.projectName, this.force);
+    log.verbose('项目名称', this.projectName, this.force);
   }
 
   async exec() {
@@ -133,36 +133,38 @@ class IninCommand extends Command {
       return /^[a-zA-Z]+([-][a-zA-Z][a-zA-Z0-9]*|[_][a-zA-Z][a-zA-Z0-9]*|[a-zA-Z0-9])*$/.test(v);
     }
 
-    const { projectName, projectVersion, template } = await inrequirer.prompt([
-      // 项目名称需要兼容，用户是否在命令行输入
-      {
-        type: 'input',
-        name: 'projectName',
-        message: '请输入项目名称',
-        validate: function (v) {
-          const done = this.async();
-          if (!_isValidName(v)) return done('请输入规范的项目名称');
-          done(null, true);
+    const { projectName, projectVersion, template } = await inrequirer.prompt(
+      [
+        // 项目名称需要兼容，用户是否在命令行输入
+        (!this.projectName || (this.projectName && !_isValidName(this.projectName))) && {
+          type: 'input',
+          name: 'projectName',
+          message: '请输入项目名称',
+          validate: function (v) {
+            const done = this.async();
+            if (!_isValidName(v)) return done('请输入规范的项目名称');
+            done(null, true);
+          },
         },
-      },
-      {
-        type: 'input',
-        name: 'projectVersion',
-        message: '请输入版本号',
-        default: '1.0.0',
-        validate: function (v) {
-          const done = this.async();
-          if (!semver.valid(v)) return done('请输入合法的版本号');
-          done(null, true);
+        {
+          type: 'input',
+          name: 'projectVersion',
+          message: '请输入版本号',
+          default: '1.0.0',
+          validate: function (v) {
+            const done = this.async();
+            if (!semver.valid(v)) return done('请输入合法的版本号');
+            done(null, true);
+          },
         },
-      },
-      {
-        type: 'list',
-        name: 'template',
-        message: '请选择项目模板',
-        choices: this.templateList,
-      },
-    ]);
+        {
+          type: 'list',
+          name: 'template',
+          message: '请选择项目模板',
+          choices: this.templateList,
+        },
+      ].filter(Boolean),
+    );
 
     return {
       projectName,
@@ -294,7 +296,6 @@ class IninCommand extends Command {
     try {
       await this.execCommand(intallCmd, intallArgs);
       await this.execCommand(startCmd, startArgs);
-      log.verbose('安装成功');
     } catch (error) {
       log.verbose('安装错误', error);
     }
@@ -323,7 +324,6 @@ class IninCommand extends Command {
    * @param {String []} args 参数
    */
   async execCommand(cmd, args) {
-    log.verbose('cmd, args:', cmd, args);
     return await execPromise(cmd, args, { cwd: process.cwd(), stdio: 'inherit' });
   }
 }

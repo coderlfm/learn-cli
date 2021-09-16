@@ -30,6 +30,7 @@ class Package {
     this.pakcageNamePreFix = `_${this.pakcageName}`.replace(/\//g, '_');
   }
 
+
   get cacheFilePath() {
     /*
       为何这样命名

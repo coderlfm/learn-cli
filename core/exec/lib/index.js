@@ -35,14 +35,14 @@ async function exec(souce, destination, objCmd) {
 
     if (pkg.isExists()) {
       // 更新
-      console.log('更新');
+      // console.log('更新');
       await pkg.update();
     } else {
       // 安装
       await pkg.install()
-      console.log('安装');
+      // console.log('安装');
     }
-    console.log('pkg', pkg);
+    // console.log('pkg', pkg);
 
 
   } else { // 加载本地模式
@@ -54,11 +54,10 @@ async function exec(souce, destination, objCmd) {
   }
 
   const filePath = pkg.getRootFilePath()
-  console.log('file:', filePath);
+  // console.log('file:', filePath);
   if (filePath) {
     // 加载文件
     // require(filePath).call(null, Array.from(arguments));
-    console.log('加载文件');
 
     try {
 
