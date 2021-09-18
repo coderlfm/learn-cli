@@ -74,3 +74,6 @@ sunshine-cli-dev init test-project --targetPath /e/learn/learn-cli/sunshine-cli/
     - 选择 **项目模板**
 - 安装 项目/组件模板 到 缓存目录
 - 拷贝 项目/组件模板 到 当前命令行目录
+- ejs 模板引擎渲染
+- 执行 `install`(动态) 命令
+- 执行 `start`(动态) 命令

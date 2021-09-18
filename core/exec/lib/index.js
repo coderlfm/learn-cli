@@ -18,7 +18,7 @@ async function exec(souce, destination, objCmd) {
 
   let targetPath = process.env.CLI_TARGET_PATH;
   const pakcageName = SETTINGS[name];
-  const packageVersion = '0.0.5';
+  const packageVersion = 'latest';
 
   let pkg;
 
